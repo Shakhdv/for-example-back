@@ -1,7 +1,7 @@
 const mongoose = require ("mongoose")
 
 const categorySchema = mongoose.Schema({
-    Name: String
+    name: String
 })
 const Category = mongoose.model("Category",categorySchema)
 
