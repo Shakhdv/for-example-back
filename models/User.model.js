@@ -14,7 +14,11 @@ const userSchema = mongoose.Schema({
     {
       complete: {
         type: Boolean,
-        default: false
+        default: false,
+      },
+      test: {
+        type: Boolean,
+        default: false,
       },
       program: {
         type: mongoose.SchemaTypes.ObjectId,

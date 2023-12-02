@@ -6,19 +6,20 @@ const programSchema = mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "Category",
   },
-  lessons: [
-    {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "Lesson",
-    },
-  ],
   descr: String,
   image: String,
   price: Number,
-  reviews: [
+  demo: String,
+  lessons: [
     {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "Review",
+      complete: {
+        type: Boolean,
+        default: false,
+      },
+      lesson: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "Lesson",
+      },
     },
   ],
 });
