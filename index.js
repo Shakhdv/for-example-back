@@ -8,8 +8,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/images", express.static(path.resolve(__dirname, "images")));
-app.use(require("./routes/user.route"));
+app.use(require("./routes/users.route"));
 app.use(require("./routes/categories.route"));
+app.use(require("./routes/lessons.route"));
+app.use(require("./routes/programs.route"));
+app.use(require("./routes/reviews.route"));
+app.use(require("./routes/tasks.route"));
 
 mongoose.connect(process.env.MONGO_SERVER);
 
