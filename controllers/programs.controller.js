@@ -3,7 +3,8 @@ const Program = require("../models/Program.model");
 module.exports.programsController = {
   getPrograms: async (req, res) => {
     try {
-      const getPrograms = await Program.find().populate(["category", "lessons.lessony"]);
+      const getPrograms = await Program.find().populate([{path: 'lessons.lesson', populate: {path: 'tasks.task'}}, 'category']);
+      console.log(getPrograms[0].lessons[0].lesson.tasks);
       res.json(getPrograms);
     } catch (error) {
       res.json({ error: error.message });

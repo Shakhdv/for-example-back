@@ -11,5 +11,6 @@ router.post("/login", userController.login);
 router.patch("/user", authMiddleware, userController.addPrograms);
 router.patch("/users/:id", userController.completeProgram);
 router.patch("/user/:id", userController.ProgramToTest);
+router.patch("/user/cash/:id", userController.addCash);
 
 module.exports = router;
