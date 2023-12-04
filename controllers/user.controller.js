@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 module.exports.userController = {
   getOneUser: async (req, res) => {
     try {
-      const users = await User.findById(req.user.id);
+      const users = await User.findById(req.user.id).populate({path: "programs.program", populate: {path: "lessons.lesson", populate: {path: "tasks.task"}}});
       res.json(users);
     } catch (error) {
       res.json({ error: error.message });
@@ -13,7 +13,7 @@ module.exports.userController = {
   },
   getAllUsers: async (req, res) => {
     try {
-      const users = await User.find();
+      const users = await User.find().populate("programs.program");
       res.json(users);
     } catch (error) {
       res.json({ error: error.message });
@@ -29,6 +29,21 @@ module.exports.userController = {
       avatar: req.file.path,
       admin,
     });
+
+    res.json(user);
+  },
+  addCash: async (req, res) => {
+    const { newCash } = req.body;
+    const {id} = req.params
+
+    const userOne = await User.findById(id);
+    const oldCash = userOne.cash;
+    const sum = newCash + oldCash;
+
+    const user = await User.findByIdAndUpdate(id, {
+      cash: sum,
+    });
+    user.save();
 
     res.json(user);
   },
@@ -52,14 +67,17 @@ module.exports.userController = {
     res.json({ token, id: payload.id });
   },
   addPrograms: async (req, res) => {
-    const { program, id } = req.body;
+    const { program, id, price } = req.body;
+    const userOne = await User.findById(id);
+    const oldCash = userOne.cash;
+    const sum = oldCash - price;
 
     const user = await User.findByIdAndUpdate(id, {
       $push: {
-        tours: {
+        programs: {
           program,
         },
-      },
+      }, cash: sum
     });
 
     res.json(user);
