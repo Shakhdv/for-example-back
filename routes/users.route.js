@@ -10,6 +10,7 @@ router.post("/sign", avatarMiddleware.single("image"), userController.addUsers);
 router.post("/login", userController.login);
 router.patch("/user", authMiddleware, userController.addPrograms);
 router.patch("/users/:id", userController.completeProgram);
+router.patch("/user/lesson/:id", userController.completeLesson);
 router.patch("/user/:id", userController.ProgramToTest);
 router.patch("/user/cash/:id", userController.addCash);
 
