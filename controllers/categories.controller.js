@@ -11,7 +11,7 @@ module.exports.categoriesController = {
   },
   addCategory: async (req, res) => {
     try {
-      const { categoryName } = req.body;
+      const { categoryName, } = req.body;
       const newCategory = await Category.create({
         categoryName,
       });
