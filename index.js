@@ -14,6 +14,7 @@ app.use(require("./routes/lessons.route"));
 app.use(require("./routes/programs.route"));
 app.use(require("./routes/reviews.route"));
 app.use(require("./routes/tasks.route"));
+app.use(require("./routes/consults.route"))
 
 mongoose.connect(process.env.MONGO_SERVER);
 
