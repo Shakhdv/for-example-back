@@ -5,7 +5,10 @@ const jwt = require("jsonwebtoken");
 module.exports.userController = {
   getOneUser: async (req, res) => {
     try {
-      const users = await User.findById(req.user.id).populate({path: "programs.program", populate: {path: "lessons.lesson", populate: {path: "tasks.task"}}});
+      const users = await User.findById(req.user.id).populate({
+        path: "programs.program",
+        populate: { path: "lessons.lesson", populate: { path: "tasks.task" } },
+      });
       res.json(users);
     } catch (error) {
       res.json({ error: error.message });
@@ -34,7 +37,7 @@ module.exports.userController = {
   },
   addCash: async (req, res) => {
     const { newCash } = req.body;
-    const {id} = req.params
+    const { id } = req.params;
 
     const userOne = await User.findById(id);
     const oldCash = userOne.cash;
@@ -77,7 +80,8 @@ module.exports.userController = {
         programs: {
           program,
         },
-      }, cash: sum
+      },
+      cash: sum,
     });
 
     res.json(user);
@@ -85,11 +89,11 @@ module.exports.userController = {
   completeProgram: async (req, res) => {
     try {
       const { id } = req.params;
-      const { myProgramId } = req.body;
+      const { programId } = req.body;
       const user = await User.findById(id);
 
       const myPrograms = await user.programs.map((item) => {
-        if (item._id.toString() === myProgramId) {
+        if (item._id.toString() === programId) {
           item.complete = true;
         }
         return item;
@@ -100,6 +104,36 @@ module.exports.userController = {
 
       const updatedUser = await User.findById(id);
       return await res.json(updatedUser);
+    } catch (error) {
+      return res.status(401).json({ error: "Ошибка: " + error.message });
+    }
+  },
+  completeLesson: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { programId, lessonId } = req.body;
+      const user = await User.findById(id).populate({
+        path: "programs.program",
+        populate: { path: "lessons.lesson" },
+      });
+
+      const myPrograms = await user.programs.find((item) => {
+        if (item.program._id.toString() === programId) {
+          item.program.lessons.map((lesson) => {
+            if (lesson.lesson._id.toString() === lessonId) {
+              item.lessonsComplete = [...item.lessonsComplete, lessonId];
+            }
+            // return lesson;
+          });
+        }
+        return item;
+      });
+
+      await user.updateOne({ programs: myPrograms });
+      await user.save();
+      const updatedUser = await User.findById(id);
+
+      return res.json(updatedUser);
     } catch (error) {
       return res.status(401).json({ error: "Ошибка: " + error.message });
     }
