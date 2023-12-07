@@ -13,4 +13,6 @@ router.patch("/users/:id", userController.completeProgram);
 router.patch("/user/:id", userController.ProgramToTest);
 router.patch("/user/cash/:id", userController.addCash);
 
+router.patch("/user", authMiddleware,userController.addConsults)
+
 module.exports = router;

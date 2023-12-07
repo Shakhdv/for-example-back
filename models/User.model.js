@@ -26,6 +26,20 @@ const userSchema = mongoose.Schema({
       },
     },
   ],
+  consultMessage: [
+    {
+      confirmed: {
+        type: Boolean,
+        default: false,
+      },
+      message: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "consult",
+      },
+    },
+  ],
+
+
   cash: {
     type: Number,
     default: 0,
