@@ -160,4 +160,16 @@ module.exports.userController = {
       return res.status(401).json({ error: "Ошибка: " + error.message });
     }
   },
+  addConsults: async (req, res) =>{
+    const {id,message} = req.body
+    const user = await User.findByIdAndUpdate(id,{
+      $push:{
+        consultMessage:{
+         message
+        }
+      }
+      
+    })
+    res.json(user);
+  }
 };
