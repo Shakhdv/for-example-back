@@ -24,6 +24,7 @@ const userSchema = mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: "Program",
       },
+      lessonsComplete: [String],
     },
   ],
   consultMessage: [
