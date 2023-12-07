@@ -134,7 +134,6 @@ module.exports.userController = {
         }
         return item;
       });
-
       await user.updateOne({ programs: myPrograms });
       await user.save();
       const updatedUser = await User.findById(id);
