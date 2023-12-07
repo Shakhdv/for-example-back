@@ -116,15 +116,21 @@ module.exports.userController = {
         path: "programs.program",
         populate: { path: "lessons.lesson" },
       });
-
-      const myPrograms = await user.programs.find((item) => {
+      const program = await user.programs.map((item) => {
         if (item.program._id.toString() === programId) {
           item.program.lessons.map((lesson) => {
             if (lesson.lesson._id.toString() === lessonId) {
               item.lessonsComplete = [...item.lessonsComplete, lessonId];
             }
-            // return lesson;
+            return lesson;
           });
+        }
+        return item;
+      });
+      console.log(program);
+      const myPrograms = await user.programs.map((item) => {
+        if (item._id === program._id) {
+          item = program;
         }
         return item;
       });

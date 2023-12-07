@@ -17,7 +17,7 @@ module.exports.tasksController = {
         lesson,
         descr,
         keys,
-        image: req.file.path,
+        // image: req.file.path,
         answer,
       });
       res.json(newTask);
