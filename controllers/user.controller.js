@@ -41,7 +41,7 @@ module.exports.userController = {
 
     const userOne = await User.findById(id);
     const oldCash = userOne.cash;
-    const sum = newCash + oldCash;
+    const sum = Number(newCash) + oldCash;
 
     const user = await User.findByIdAndUpdate(id, {
       cash: sum,
@@ -75,16 +75,30 @@ module.exports.userController = {
     const oldCash = userOne.cash;
     const sum = oldCash - price;
 
-    const user = await User.findByIdAndUpdate(id, {
-      $push: {
-        programs: {
-          program,
-        },
-      },
-      cash: sum,
-    });
+    const user = await User.findById(id);
 
-    res.json(user);
+    if (
+      !user.programs.find(
+        (item) => item.program.toString() === program.toString()
+      )
+    ) {
+      console.log("ok");
+
+      await user.updateOne({
+        $addToSet: {
+          programs: {
+            program,
+          },
+        },
+        cash: sum,
+      });
+
+      await user.save();
+
+      return res.json("added");
+    }
+
+    return res.json({ error: "something went wrong" });
   },
   completeProgram: async (req, res) => {
     try {
@@ -165,16 +179,15 @@ module.exports.userController = {
       return res.status(401).json({ error: "Ошибка: " + error.message });
     }
   },
-  addConsults: async (req, res) =>{
-    const {id,message} = req.body
-    const user = await User.findByIdAndUpdate(id,{
-      $push:{
-        consultMessage:{
-         message
-        }
-      }
-      
-    })
+  addConsults: async (req, res) => {
+    const { id, message } = req.body;
+    const user = await User.findByIdAndUpdate(id, {
+      $push: {
+        consultMessage: {
+          message,
+        },
+      },
+    });
     res.json(user);
-  }
+  },
 };
