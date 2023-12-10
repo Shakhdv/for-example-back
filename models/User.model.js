@@ -39,8 +39,7 @@ const userSchema = mongoose.Schema({
       },
     },
   ],
-
-
+  email: String,
   cash: {
     type: Number,
     default: 0,

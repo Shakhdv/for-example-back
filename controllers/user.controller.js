@@ -23,7 +23,7 @@ module.exports.userController = {
     }
   },
   addUsers: async (req, res) => {
-    const { login, password, admin } = req.body;
+    const { login, password, admin, email } = req.body;
     const hash = await bcrypt.hash(password, Number(process.env.BCRYPT_ROUNDS));
 
     const user = await User.create({
@@ -31,6 +31,7 @@ module.exports.userController = {
       password: hash,
       avatar: req.file.path,
       admin,
+      email,
     });
 
     res.json(user);
@@ -41,14 +42,17 @@ module.exports.userController = {
 
     const userOne = await User.findById(id);
     const oldCash = userOne.cash;
-    const sum = Number(newCash) + oldCash;
+    if (Number(newCash) > 0) {
+      const sum = Number(newCash) + oldCash;
 
-    const user = await User.findByIdAndUpdate(id, {
-      cash: sum,
-    });
-    user.save();
-
-    res.json(user);
+      const user = await User.findByIdAndUpdate(id, {
+        cash: sum,
+      });
+      user.save();
+  
+      return res.json(user);
+    }
+    res.json(userOne);
   },
   login: async (req, res) => {
     const { login, password } = req.body;
